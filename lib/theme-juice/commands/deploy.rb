@@ -15,7 +15,7 @@ module ThemeJuice
             runner do |tasks|
               tasks << Tasks::Settings.new
               tasks << Tasks::Stage.new
-              tasks << Tasks::VMStage.new
+              tasks << Tasks::VALETStage.new
               tasks << Tasks::Load.new
               tasks << Tasks::Invoke.new(args)
             end

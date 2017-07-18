@@ -7,7 +7,7 @@ describe ThemeJuice::Tasks::VMStage do
       .at_least(:once).and_return YAML.load %Q{
 deployment:
   stages:
-    vagrant:
+    valet:
       server: example.dev
       path: /srv/www/tj-example
       user: vagrant
@@ -22,7 +22,7 @@ deployment:
   end
 
   before :each do
-    @task = ThemeJuice::Tasks::VMStage.new
+    @task = ThemeJuice::Tasks::VALETStage.new
   end
 
   describe "#execute" do

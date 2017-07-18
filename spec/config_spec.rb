@@ -196,53 +196,6 @@ commands:
           expect { @config.command :install }.to output(/run  echo "test" from "\/"/).to_stdout
         end
       end
-
-      context "when receiving a command with the Env.inside_vm flag" do
-
-        before :each do
-          allow(@env).to receive(:vm_path).and_return File.expand_path("~/tj-vagrant-test")
-          allow(@env).to receive(:inside_vm).and_return true
-          allow(@env).to receive(:verbose).and_return true
-          allow(@env).to receive(:dryrun).and_return true
-          expect_any_instance_of(@config).to receive(:config)
-            .once.and_return YAML.load %Q{
-commands:
-  install:
-    - echo "test"
-}
-        end
-
-        it "should execute the command from inside the VM using cwd as project name" do
-          allow(stdout).to receive :print
-          expect { @config.command :install }.to output(
-            /run  vagrant ssh -c 'cd \/srv\/www\/project && echo "test"' from "\/[^\/]+\/[^\/]+\/tj-vagrant-test"/
-          ).to_stdout
-        end
-      end
-
-      context "when receiving a command with the Env.inside_vm and Env.from_srv flag" do
-
-        before :each do
-          allow(@env).to receive(:vm_path).and_return File.expand_path("~/tj-vagrant-test")
-          allow(@env).to receive(:from_srv).and_return "/some/path"
-          allow(@env).to receive(:inside_vm).and_return true
-          allow(@env).to receive(:verbose).and_return true
-          allow(@env).to receive(:dryrun).and_return true
-          expect_any_instance_of(@config).to receive(:config)
-            .once.and_return YAML.load %Q{
-commands:
-  install:
-    - echo "test"
-}
-        end
-
-        it "should execute the command from the given path inside the VM" do
-          allow(stdout).to receive :print
-          expect { @config.command :install }.to output(
-            /run  vagrant ssh -c 'cd \/some\/path && echo "test"' from "\/[^\/]+\/[^\/]+\/tj-vagrant-test"/
-          ).to_stdout
-        end
-      end
     end
 
     describe ".deployment" do

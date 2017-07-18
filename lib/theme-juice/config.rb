@@ -19,7 +19,7 @@ module ThemeJuice
       commands.fetch("#{cmd}") {
         @io.error "Command '#{cmd}' not found in config", NotImplementedError }
         .each { |c| cmds = format_command(c, *args)
-          @env.inside_vm ? run_inside_vm(cmds) : run(cmds) }
+          run(cmds) }
     rescue NoMethodError
       @io.say "Skipping...", :color => :yellow, :icon => :notice
     end
@@ -56,15 +56,6 @@ module ThemeJuice
       @util.inside (@env.from_path || @project.location) do
         @util.run command, { :verbose => @env.verbose,
           :capture => @env.quiet }
-      end
-    end
-
-    def run_inside_vm(command)
-      project_dir = @env.from_srv || @project.vm_srv
-
-      @util.inside @env.vm_path do
-        @util.run "vagrant ssh -c 'cd #{project_dir} && #{command}'", {
-          :verbose => @env.verbose, :capture => @env.quiet }
       end
     end
 

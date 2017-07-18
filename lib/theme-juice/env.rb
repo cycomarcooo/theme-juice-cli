@@ -4,51 +4,22 @@ module ThemeJuice
   module Env
     include SingletonHelper
 
-    attr_accessor :vm_box
-    attr_accessor :vm_path
-    attr_accessor :vm_ip
-    attr_accessor :vm_prefix
-    attr_accessor :vm_revision
     attr_accessor :from_path
     attr_accessor :from_srv
-    attr_accessor :inside_vm
     attr_accessor :yolo
     attr_accessor :boring
     attr_accessor :no_unicode
     attr_accessor :no_colors
     attr_accessor :no_animations
-    attr_accessor :no_landrush
-    attr_accessor :no_port_forward
     attr_accessor :verbose
     attr_accessor :quiet
     attr_accessor :robot
     attr_accessor :trace
     attr_accessor :dryrun
-    attr_accessor :nginx
     attr_accessor :stage
     attr_accessor :cap
     attr_accessor :archive
     attr_accessor :branch
-
-    def vm_box=(val)
-      @vm_box = val || ENV.fetch("TJ_VM_BOX") { "git@github.com:ezekg/graft.git" }
-    end
-
-    def vm_path=(val)
-      @vm_path = val || ENV.fetch("TJ_VM_PATH") { File.expand_path("~/graft") }
-    end
-
-    def vm_ip=(val)
-      @vm_ip = val || ENV.fetch("TJ_VM_IP") { "192.168.13.37" }
-    end
-
-    def vm_prefix=(val)
-      @vm_prefix = val || ENV.fetch("TJ_VM_PREFIX") { "tj-" }
-    end
-
-    def vm_revision=(val)
-      @vm_revision = val || ENV.fetch("TJ_VM_REVISION") { nil }
-    end
 
     def from_path=(val)
       @from_path = val || ENV.fetch("TJ_FROM_PATH") { nil }
@@ -56,10 +27,6 @@ module ThemeJuice
 
     def from_srv=(val)
       @from_srv = val || ENV.fetch("TJ_FROM_SRV") { nil }
-    end
-
-    def inside_vm=(val)
-      @inside_vm = val || ENV.fetch("TJ_INSIDE_VM") { false }
     end
 
     def yolo=(val)
@@ -86,14 +53,6 @@ module ThemeJuice
       @no_animations = val || ENV.fetch("TJ_NO_ANIMATIONS") { boring }
     end
 
-    def no_landrush=(val)
-      @no_landrush = val || ENV.fetch("TJ_NO_LANDRUSH") { false }
-    end
-
-    def no_port_forward=(val)
-      @no_port_forward = val || ENV.fetch("TJ_NO_PORT_FORWARD") { false }
-    end
-
     def verbose=(val)
       @verbose = val || ENV.fetch("TJ_VERBOSE") { false }
     end
@@ -108,10 +67,6 @@ module ThemeJuice
 
     def dryrun=(val)
       @dryrun = val || ENV.fetch("TJ_DRYRUN") { false }
-    end
-
-    def nginx=(val)
-      @nginx = val || ENV.fetch("TJ_NGINX") { false }
     end
 
     extend self

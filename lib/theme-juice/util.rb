@@ -29,17 +29,6 @@ module ThemeJuice
           _run command, config
         end
       end
-
-      def run_inside_vm(command, config = {}, &block)
-        inside @env.vm_path do
-          if command.is_a? Array
-            yield command if block_given?
-            _run %Q[vagrant ssh -c "#{command.join(" && ")}"], config
-          else
-            _run %Q[vagrant ssh -c "#{command}"], config
-          end
-        end
-      end
     end
   end
 end

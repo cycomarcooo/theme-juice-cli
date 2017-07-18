@@ -4,12 +4,9 @@ describe ThemeJuice::Tasks::Load do
     @env = ThemeJuice::Env
     @project = ThemeJuice::Project
 
-    allow(@env).to receive(:vm_path).and_return File.expand_path("~/tj-vagrant-test")
     allow(@env).to receive(:verbose).and_return true
     allow(@env).to receive(:dryrun).and_return true
-    allow(@project).to receive(:location).and_return "#{@env.vm_path}"
 
-    FileUtils.mkdir_p "#{@env.vm_path}/deploy"
   end
 
   before :each do
@@ -96,38 +93,6 @@ slack:
         .at_least :once
 
       expect { @task.execute }.to_not raise_error
-    end
-
-    context "when a custom Capistrano task is found" do
-
-      before do
-        FileUtils.touch "#{@env.vm_path}/deploy/cap_task.rb"
-      end
-
-      it "should load custom Capistrano tasks" do
-        allow(@task).to receive :load_capistrano
-        allow(@task).to receive :load_tasks
-
-        allow(stdout).to receive :print
-
-        expect(@task).to receive(:load).with("#{@env.vm_path}/deploy/cap_task.rb")
-          .at_least :once
-
-        expect { @task.execute }.to_not raise_error
-      end
-    end
-
-    context "when a custom Capistrano task is not found" do
-      it "should not load custom Capistrano tasks" do
-        allow(@task).to receive :load_capistrano
-        allow(@task).to receive :load_tasks
-
-        allow(stdout).to receive :print
-
-        expect(@task).to_not receive(:load)
-
-        expect { @task.execute }.to_not raise_error
-      end
     end
   end
 end

@@ -20,29 +20,29 @@ module ThemeJuice
           tasks << Tasks::CreateConfirm.new
           tasks << Tasks::Location.new
           tasks << Tasks::Template.new
-          tasks << Tasks::VMBox.new
-          tasks << Tasks::VMPlugins.new
-          tasks << Tasks::VMLocation.new
-          tasks << Tasks::VMCustomfile.new
-          tasks << Tasks::Database.new
-          if @env.nginx
-            tasks << Tasks::Nginx.new
-          else
-            tasks << Tasks::Apache.new
-          end
+          # tasks << Tasks::VMBox.new
+          # tasks << Tasks::VMPlugins.new
+          # tasks << Tasks::VMLocation.new
+          # tasks << Tasks::VMCustomfile.new
+          # tasks << Tasks::Database.new
+          # if @env.nginx
+          #   tasks << Tasks::Nginx.new
+          # else
+          #   tasks << Tasks::Apache.new
+          # end
           if @project.no_env
             tasks << Tasks::WPConfig.new
           else
             tasks << Tasks::DotEnv.new
           end
-          tasks << Tasks::Landrush.new
-          tasks << Tasks::ForwardPorts.new
-          tasks << Tasks::SyncedFolder.new
-          tasks << Tasks::DNS.new
-          tasks << Tasks::WPCLI.new
+          # tasks << Tasks::Landrush.new
+          # tasks << Tasks::ForwardPorts.new
+          # tasks << Tasks::SyncedFolder.new
+          # tasks << Tasks::DNS.new
+          # tasks << Tasks::WPCLI.new
           tasks << Tasks::Repo.new
-          tasks << Tasks::VMProvision.new
-          tasks << Tasks::ImportDatabase.new
+          # tasks << Tasks::VMProvision.new
+          # tasks << Tasks::ImportDatabase.new
           tasks << Tasks::CreateSuccess.new
         end
       end
@@ -72,7 +72,7 @@ module ThemeJuice
         end
 
         @project.url               = @opts.fetch("url")               { url }
-        @project.xip_url           = @opts.fetch("xip_url")           { xip_url }
+        # @project.xip_url           = @opts.fetch("xip_url")           { xip_url }
         @project.template          = @opts.fetch("template")          { template }
         @project.template_revision = @opts.fetch("template_revision") { template_revision }
         @project.repository        = @opts.fetch("repository")        { repository }
@@ -80,10 +80,7 @@ module ThemeJuice
         @project.db_name           = @opts.fetch("db_name")           { db_name }
         @project.db_user           = @opts.fetch("db_user")           { db_user }
         @project.db_pass           = @opts.fetch("db_pass")           { db_pass }
-        @project.db_import         = @opts.fetch("db_import")         { db_import }
-        @project.vm_root
-        @project.vm_location
-        @project.vm_srv
+
 
         # TODO: Think up a nicer way of implementing additional logic
 
@@ -160,7 +157,7 @@ module ThemeJuice
             end
           end
 
-        valid_url? url
+        # valid_url? url
 
         url
       end
@@ -262,18 +259,18 @@ module ThemeJuice
         end
       end
 
-      def db_import
-        return false if @project.no_db || @project.skip_db || @project.use_defaults
-
-        if @io.agree? "Would you like to import an existing database?"
-          db = @io.ask "Where is the database file?", {
-            :indent => 2, :path => true }
-        else
-          db = false
-        end
-
-        db
-      end
+      # def db_import
+      #   return false if @project.no_db || @project.skip_db || @project.use_defaults
+      #
+      #   if @io.agree? "Would you like to import an existing database?"
+      #     db = @io.ask "Where is the database file?", {
+      #       :indent => 2, :path => true }
+      #   else
+      #     db = false
+      #   end
+      #
+      #   db
+      # end
     end
   end
 end

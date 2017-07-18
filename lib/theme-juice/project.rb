@@ -7,14 +7,8 @@ module ThemeJuice
     attr_accessor :name
     attr_accessor :location
     attr_accessor :url
-    attr_accessor :xip_url
     attr_accessor :template
     attr_accessor :template_revision
-    attr_accessor :vm_root
-    attr_accessor :vm_location
-    attr_accessor :vm_srv
-    attr_accessor :vm_restart
-    attr_accessor :vm_provision
     attr_accessor :repository
     attr_accessor :db_host
     attr_accessor :db_name
@@ -33,18 +27,6 @@ module ThemeJuice
     attr_accessor :no_ssl
     attr_accessor :no_config
     attr_accessor :wp_config_modify
-
-    def vm_root
-      @vm_root ||= File.expand_path("#{Env.vm_path}/www")
-    end
-
-    def vm_location
-      @vm_location ||= "#{vm_root}/#{Env.vm_prefix}#{name}"
-    end
-
-    def vm_srv
-      @vm_srv ||= "/srv/www/#{Env.vm_prefix}#{name}"
-    end
 
     extend self
   end
