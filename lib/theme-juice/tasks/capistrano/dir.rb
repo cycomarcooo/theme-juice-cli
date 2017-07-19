@@ -28,7 +28,7 @@ namespace :dir do
     end
 
     if fetch(:archive)
-      on roles(:dev) do
+      run_locally do
         within fetch(:dev_path) do
           execute :tar, "-zcf", "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/*"
         end
@@ -44,7 +44,7 @@ namespace :dir do
         end
       end
 
-      on roles(:dev) do
+      run_locally do
         within fetch(:dev_path) do
           execute :rm, "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}"
         end
@@ -76,7 +76,7 @@ namespace :dir do
         end
       end
 
-      on roles(:dev) do
+      run_locally do
         within fetch(:dev_path) do
           execute :tar, "--no-overwrite-dir -zxf", "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/"
           execute :rm, "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}"

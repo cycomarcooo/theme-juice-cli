@@ -39,10 +39,8 @@ namespace :db do
     invoke "db:backup"
     invoke "db:init"
 
-    on roles(:dev) do
-      within fetch(:dev_path) do
-        execute :wp, :db, :export, "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}"
-      end
+    run_locally do
+      execute :wp, :db, :export, "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}"
     end
 
     on release_roles(:db) do
@@ -56,10 +54,8 @@ namespace :db do
       end
     end
 
-    on roles(:dev) do
-      within fetch(:dev_path) do
-        execute :rm, "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}"
-      end
+    run_locally do
+      execute :rm, "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}"
     end
   end
 
@@ -77,12 +73,10 @@ namespace :db do
       end
     end
 
-    on roles(:dev) do
-      within fetch(:dev_path) do
-        execute :wp, :db, :import, "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
-        execute :rm, "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
-        execute :wp, "search-replace", fetch(:stage_url), fetch(:vm_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
-      end
+    run_locally do
+      execute :wp, :db, :import, "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
+      execute :rm, "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
+      execute :wp, "search-replace", fetch(:stage_url), fetch(:vm_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
     end
   end
 end
