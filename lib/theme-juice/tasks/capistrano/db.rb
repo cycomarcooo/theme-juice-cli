@@ -6,7 +6,7 @@ namespace :db do
   task :init do
     set :timestamp, Time.now.strftime("%Y-%m-%d-%H-%M-%S")
     set :remote_db, "#{fetch(:timestamp)}.#{fetch(:stage)}.sql"
-    set :vm_db, "#{fetch(:timestamp)}.local.sql"
+    set :local_db, "#{fetch(:timestamp)}.local.sql"
   end
 
   desc "Backup database on remote to local"
@@ -22,11 +22,11 @@ namespace :db do
       end
 
       run_locally do
-        execute :mkdir, "-p", fetch(:vm_backup_dir)
+        execute :mkdir, "-p", fetch(:val_backup_dir)
       end
 
       download! release_path.join("#{fetch(:tmp_dir)}/#{fetch(:remote_db_backup)}"),
-        "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db_backup)}"
+        "#{fetch(:val_backup_dir)}/#{fetch(:remote_db_backup)}"
 
       within release_path do
         execute :rm, "#{fetch(:tmp_dir)}/#{fetch(:remote_db_backup)}"
@@ -40,22 +40,24 @@ namespace :db do
     invoke "db:init"
 
     run_locally do
-      execute :wp, :db, :export, "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}"
+      execute :wp, :db, :export, "#{fetch(:val_backup_dir)}/#{fetch(:local_db)}"
     end
 
     on release_roles(:db) do
-      upload! "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}", release_path
-        .join("#{fetch(:tmp_dir)}/#{fetch(:vm_db)}")
+      upload! "#{fetch(:val_backup_dir)}/#{fetch(:local_db)}", release_path
+        .join("#{fetch(:tmp_dir)}/#{fetch(:local_db)}")
 
       within release_path do
-        execute :wp, :db, :import, "#{fetch(:tmp_dir)}/#{fetch(:vm_db)}"
-        execute :rm, "#{fetch(:tmp_dir)}/#{fetch(:vm_db)}"
-        execute :wp, "search-replace", fetch(:vm_url), fetch(:stage_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
+        execute :wp, :db, :import, "#{fetch(:tmp_dir)}/#{fetch(:local_db)}"
+        execute :rm, "#{fetch(:tmp_dir)}/#{fetch(:local_db)}"
+        execute :wp, "search-replace", fetch(:val_url), fetch(:stage_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
       end
     end
 
+
     run_locally do
-      execute :rm, "#{fetch(:vm_backup_dir)}/#{fetch(:vm_db)}"
+      execute :rm, "#{fetch(:val_backup_dir)}/#{fetch(:local_db)}"
+
     end
   end
 
@@ -68,15 +70,15 @@ namespace :db do
       within release_path do
         execute :wp, :db, :export, "#{fetch(:tmp_dir)}/#{fetch(:remote_db)}"
         download! release_path.join("#{fetch(:tmp_dir)}/#{fetch(:remote_db)}"),
-          "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
+          "#{fetch(:val_backup_dir)}/#{fetch(:remote_db)}"
         execute :rm, "#{fetch(:tmp_dir)}/#{fetch(:remote_db)}"
       end
     end
 
     run_locally do
-      execute :wp, :db, :import, "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
-      execute :rm, "#{fetch(:vm_backup_dir)}/#{fetch(:remote_db)}"
-      execute :wp, "search-replace", fetch(:stage_url), fetch(:vm_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
+      execute :wp, :db, :import, "#{fetch(:val_backup_dir)}/#{fetch(:remote_db)}"
+      execute :rm, "#{fetch(:val_backup_dir)}/#{fetch(:remote_db)}"
+      execute :wp, "search-replace", fetch(:stage_url), fetch(:val_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
     end
   end
 end

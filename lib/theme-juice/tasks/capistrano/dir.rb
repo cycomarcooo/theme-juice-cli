@@ -5,7 +5,7 @@ namespace :dir do
     set :dir_archive, "archive.tar.gz"
 
     run_locally do
-      execute :mkdir, "-p", fetch(:vm_tmp_dir)
+      execute :mkdir, "-p", fetch(:val_tmp_dir)
     end
 
     on roles(:app) do
@@ -29,13 +29,13 @@ namespace :dir do
 
     if fetch(:archive)
       run_locally do
-        within fetch(:dev_path) do
-          execute :tar, "-zcf", "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/*"
+        within fetch(:val_path) do
+          execute :tar, "-zcf", "#{fetch(:val_tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/*"
         end
       end
 
       on release_roles(:app) do
-        upload! "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}", release_path
+        upload! "#{fetch(:val_tmp_dir)}/#{fetch(:dir_archive)}", release_path
           .join("#{fetch(:tmp_dir)}/#{fetch(:dir_archive)}")
 
         within release_path do
@@ -45,8 +45,8 @@ namespace :dir do
       end
 
       run_locally do
-        within fetch(:dev_path) do
-          execute :rm, "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}"
+        within fetch(:val_path) do
+          execute :rm, "#{fetch(:val_tmp_dir)}/#{fetch(:dir_archive)}"
         end
       end
     else
@@ -71,15 +71,15 @@ namespace :dir do
         within release_path do
           execute :tar, "-hzcf", "#{fetch(:tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/*"
           download! release_path.join("#{fetch(:tmp_dir)}/#{fetch(:dir_archive)}"),
-            "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}"
+            "#{fetch(:val_tmp_dir)}/#{fetch(:dir_archive)}"
           execute :rm, "#{fetch(:tmp_dir)}/#{fetch(:dir_archive)}"
         end
       end
 
       run_locally do
-        within fetch(:dev_path) do
-          execute :tar, "--no-overwrite-dir -zxf", "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/"
-          execute :rm, "#{fetch(:vm_tmp_dir)}/#{fetch(:dir_archive)}"
+        within fetch(:val_path) do
+          execute :tar, "--no-overwrite-dir -zxf", "#{fetch(:val_tmp_dir)}/#{fetch(:dir_archive)}", "#{args[:dir]}/"
+          execute :rm, "#{fetch(:val_tmp_dir)}/#{fetch(:dir_archive)}"
         end
       end
     else

@@ -35,15 +35,15 @@ deployment:
     end
 
     it "should set VM stage options" do
-      expect(@task).to receive(:set).with(:dev_path, kind_of(Proc))
+      expect(@task).to receive(:set).with(:val_path, kind_of(Proc))
         .and_return "/srv/www/tj-example"
-      expect(@task).to receive(:set).with(:vm_url, kind_of(Proc))
+      expect(@task).to receive(:set).with(:val_url, kind_of(Proc))
         .and_return "example.dev"
-      expect(@task).to receive(:set).with(:vm_uploads_dir, kind_of(Proc))
+      expect(@task).to receive(:set).with(:val_uploads_dir, kind_of(Proc))
         .and_return "app/uploads"
-      expect(@task).to receive(:set).with(:vm_backup_dir, kind_of(Proc))
+      expect(@task).to receive(:set).with(:val_backup_dir, kind_of(Proc))
         .and_return "backup"
-      expect(@task).to receive(:set).with(:vm_tmp_dir, kind_of(Proc))
+      expect(@task).to receive(:set).with(:val_tmp_dir, kind_of(Proc))
         .and_return "tmp"
 
       capture(:stdout) { @task.execute }

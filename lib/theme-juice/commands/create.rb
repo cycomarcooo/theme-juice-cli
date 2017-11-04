@@ -5,7 +5,7 @@ module ThemeJuice
     class Create < Command
 
       TEMPLATES = {
-        "themejuice/sprout"   => "git@github.com:ezekg/theme-juice-starter.git",
+        "collectif/sage"      => "git@bitbucket.org:cycomarcooo/sage-template.git",
         "wordpress/wordpress" => "git@github.com:WordPress/WordPress.git",
         "other (specify)"     => nil,
         "none"                => false
@@ -20,26 +20,13 @@ module ThemeJuice
           tasks << Tasks::CreateConfirm.new
           tasks << Tasks::Location.new
           tasks << Tasks::Template.new
-          # tasks << Tasks::VMBox.new
-          # tasks << Tasks::VMPlugins.new
-          # tasks << Tasks::VMLocation.new
-          # tasks << Tasks::VMCustomfile.new
-          # tasks << Tasks::Database.new
-          # if @env.nginx
-          #   tasks << Tasks::Nginx.new
-          # else
-          #   tasks << Tasks::Apache.new
-          # end
+
           if @project.no_env
             tasks << Tasks::WPConfig.new
           else
             tasks << Tasks::DotEnv.new
           end
-          # tasks << Tasks::Landrush.new
-          # tasks << Tasks::ForwardPorts.new
-          # tasks << Tasks::SyncedFolder.new
-          # tasks << Tasks::DNS.new
-          # tasks << Tasks::WPCLI.new
+
           tasks << Tasks::Repo.new
           # tasks << Tasks::VMProvision.new
           # tasks << Tasks::ImportDatabase.new
@@ -72,7 +59,6 @@ module ThemeJuice
         end
 
         @project.url               = @opts.fetch("url")               { url }
-        # @project.xip_url           = @opts.fetch("xip_url")           { xip_url }
         @project.template          = @opts.fetch("template")          { template }
         @project.template_revision = @opts.fetch("template_revision") { template_revision }
         @project.repository        = @opts.fetch("repository")        { repository }
@@ -153,43 +139,24 @@ module ThemeJuice
             if @project.use_defaults
               "#{@project.name}.dev"
             else
-              @io.ask "What do you want the development url to be? (this should end in '.dev')", :default => "#{@project.name}.dev"
+              @io.ask "What do you want the development url to be? (this should end in '.dev' or '.app')", :default => "#{@project.name}.app"
             end
           end
 
-        # valid_url? url
-
         url
-      end
-
-      def valid_url?(url)
-        unless "#{url}".match /\.dev$/
-          @io.error "Your development url '#{url}' doesn't end with '.dev'. This is used internally by Landrush, so that's not gonna work. Aborting mission."
-        end
-
-        "#{url}".match /[^0-9a-z\.\-]/ do |char|
-          @io.error "Your development url contains an invalid character '#{char}'. Aborting mission."
-        end
-
-        true
-      end
-
-      def xip_url
-        xip_url = @project.url.gsub /\.dev$/, ""
-
-        xip_url
       end
 
       def template
         return false if @project.bare
 
         if @project.use_defaults
-          template = TEMPLATES["themejuice/sprout"]
+          # template = TEMPLATES["themejuice/sprout"]
+          template = TEMPLATES["collectif/sage"]
         else
           choice = @io.choose "Which starter template would you like to use?", :blue, TEMPLATES.keys
 
           case choice
-          when /themejuice/i
+          when /collectf/i
             @io.say "Awesome choice!", :color => :green, :icon => :success
           when /wordpress/i
             @project.wp_config_modify  = true
@@ -245,8 +212,8 @@ module ThemeJuice
           default = case task
                     when "host" then "localhost"
                     when "name" then "#{clean_name}_db"
-                    when "user" then "#{clean_name}_user"
-                    when "pass" then Faker::Internet.password(24)
+                    when "user" then "root" # "#{clean_name}_user"
+                    when "pass" then "LpttyCWP" # Faker::Internet.password(24)
                     end
 
           if @project.skip_db || @project.use_defaults
