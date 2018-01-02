@@ -76,6 +76,8 @@ namespace :db do
     end
 
     run_locally do
+      # backup local db
+      execute :wp, :db, :export, "#{fetch(:val_backup_dir)}/#{fetch(:local_db)}"
       execute :wp, :db, :import, "#{fetch(:val_backup_dir)}/#{fetch(:remote_db)}"
       execute :rm, "#{fetch(:val_backup_dir)}/#{fetch(:remote_db)}"
       execute :wp, "search-replace", fetch(:stage_url), fetch(:val_url), fetch(:wpcli_args) || "--skip-columns=guid --all-tables"
